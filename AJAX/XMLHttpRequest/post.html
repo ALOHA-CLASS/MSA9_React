@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XMLHttpRequest - post</title>
+</head>
+<body>
+    <script>
+        // XMLHttpRequest 객체 생성
+        var xhr = new XMLHttpRequest();
+
+        // 이벤트 핸들러 등록
+        xhr.onreadystatechange = function() {
+            // xhr.readyState : 클라이언트의 준비 상태 변수
+            // - UNSENT             : open() 호출 전
+                // - OPENED             : open() 호출된 상태
+                // - HEADERS_RECEIVED   : 응답 헤더를 수신
+                // - LOADING            : 응답 데이터를 가져오고 있는 상태
+                // - DONE               : 요청 완료
+
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                // xhr.status      : 응답 상태 코드
+                // ex) 200, 404, 500
+                // 요청이 완료되면 실행되는 코드
+                if (xhr.status === 200) {
+                    // 성공적으로 응답 받았을 때의 코드
+                    // console.log(xhr.responseText);
+                    // ⭐ 응답 데이터는 HTTP 입장에서 JSON 문자열이기 때문에
+                    // 다시 JavaScript 가 객체로 인식하도록 JSON 문자열로 객체로 변환해야한다.
+                    // JSON.parse( ) : JSON 형식의 문자열을 객체로 변환해주는 함수
+                    let obj = JSON.parse(xhr.responseText)
+                    console.log(obj.json);
+                } else {
+                    // 오류 처리 코드
+                    console.error('Request failed with status:', xhr.status);
+                }
+            }
+        };
+
+        var url = 'https://httpbin.org/post'
+        var data = {
+            name : 'aloha',
+            age  : 20
+        }
+
+        // 요청 열기(설정)
+        // xhr.open("요청메소드", url, 비동기여부)
+        xhr.open('POST', url, true);
+
+        // 헤더 설정
+        xhr.setRequestHeader('Content-Type', 'application/json')
+
+        // 요청 전송
+        xhr.send(JSON.stringify(data));
+    </script>
+</body>
+</html>

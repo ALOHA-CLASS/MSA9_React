@@ -1,0 +1,23 @@
+[
+    { 
+        "no" : 1,
+        "title": "아메리카노",
+        "content": "콜롬비아 원두로 만든...",
+        "likes": 100,
+        "img": "https://i.imgur.com/D1ic2Xk.jpg"
+    },
+    { 
+        "no" : 2,
+        "title": "카페라떼",
+        "content": "라떼는 말이야...",
+        "likes": 200,
+        "img": "https://i.imgur.com/hAzIEVv.jpg"
+    },
+    { 
+        "no" : 3,
+        "title": "쿠키프라페",
+        "content": "오레오 다햇네...",
+        "likes": 300,
+        "img": "https://i.imgur.com/kDhIhLv.jpg"
+    }
+]
