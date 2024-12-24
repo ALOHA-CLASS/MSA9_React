@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace="매퍼 인터페이스 경로" --> 
+<mapper namespace="com.aloha.todo.mapper.TodoMapper">
+
+    <select id="list" resultType="Todos">
+        SELECT *
+        FROM todos
+        ORDER BY status asc, seq asc
+    </select>
+    
+    <select id="select" resultType="Todos">
+        SELECT *
+        FROM todos
+        WHERE no = #{no}
+    </select>
+
+    <select id="selectById" resultType="Todos">
+        SELECT *
+        FROM todos
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO todos ( id, name, seq )
+        VALUES ( #{id}, #{name}, #{seq} )
+    </insert>
+
+    <update id="update">
+        UPDATE todos
+         <set>
+            <if test="name != null">
+                name = #{name},
+            </if>   
+            <if test="status != null">
+                status = #{status},
+            </if>   
+            <if test="seq != null">
+                seq = #{seq},
+            </if>  
+                updated_at = now()
+         </set>
+        WHERE no = #{no}
+    </update>
+
+    <update id="updateById">
+        UPDATE todos
+         <set>
+            <if test="name != null">
+                name = #{name},
+            </if>   
+            <if test="status != null">
+                status = #{status},
+            </if>   
+            <if test="seq != null">
+                seq = #{seq},
+            </if>  
+                updated_at = now()
+         </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM todos
+        WHERE no = #{no}
+    </delete>
+
+    <delete id="deleteById">
+        DELETE FROM todos
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
