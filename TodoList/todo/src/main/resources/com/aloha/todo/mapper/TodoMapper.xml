@@ -9,8 +9,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="list" resultType="Todos">
         SELECT *
         FROM todos
-        ORDER BY status asc, seq asc
     </select>
+    <!-- 정렬 후 페이징 하면, 완료 안 된 것만 앞으로, 완료 된 것만 뒤로 나옴 -->
+    <!-- ⚡ 페이징 후 정렬을 적용 -->
+    <!-- ORDER BY status asc, seq asc -->
     
     <select id="select" resultType="Todos">
         SELECT *
@@ -72,5 +74,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DELETE FROM todos
         WHERE id = #{id}
     </delete>
+
+    <!-- 전체 완료 -->
+    <update id="completeAll">
+        UPDATE todos
+           SET status = true
+    </update>
+
+    <!-- 전체 삭제 -->
+    <delete id="deleteAll">
+        DELETE FROM todos
+    </delete>
+
 
 </mapper>

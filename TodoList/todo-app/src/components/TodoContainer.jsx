@@ -128,13 +128,59 @@ const TodoContainer = () => {
     setInput('')  // 입력 값 비우기
   }
 
+  // 전체 완료
+  // [PUT] - /todos
+  const onCompleteAll = async () => {
+    // PUT 
+    const data = {
+      id: null
+    }
+    const option = {
+      method: 'PUT',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify(data)
+    }
+    const url = `http://localhost:8080/todos`
+    try {
+      const response = await fetch(url, option)
+      const msg = await response.text()
+      console.log(msg);
+    } catch (error) {
+      console.log(error);
+    }
+    getList()
+  }
+
+  // 전체 삭제
+  // [DELETE] - /todos
+  const onDeleteAll = async () => {
+    // DELETE
+    const data = {
+      id: null
+    }
+    const option = {
+      method: 'DELETE',
+    }
+    const url = `http://localhost:8080/todos`
+    try {
+      const response = await fetch(url, option)
+      const msg = await response.text()
+      console.log(msg);
+    } catch (error) {
+      console.log(error);
+    }
+    getList()
+  }
+
   return (
     <div className="container">
         <TodoHeader />
         <TodoInput input={input} onChange={onChange} onSubmit={onSubmit} />
         <TodoList 
           todoList={todoList} onToggle={onToggle} onRemove={onRemove} />
-        <TodoFooter />
+        <TodoFooter onCompleteAll={onCompleteAll} onDeleteAll={onDeleteAll} />
     </div>
   )
 }

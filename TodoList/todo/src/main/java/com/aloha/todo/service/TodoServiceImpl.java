@@ -59,10 +59,29 @@ public class TodoServiceImpl implements TodoService {
     public PageInfo<Todos> list(int page, int size) {
         // ⭐ PageHelper.startPage( 현재 페이지, 페이당 게시글 수 ) 
         PageHelper.startPage(page, size);
-
         List<Todos> list = todoMapper.list();
         PageInfo<Todos> pageInfo = new PageInfo<>(list);
+
+        // 1️⃣ status 오름차순
+        // 2️⃣ seq 오름차순
+        pageInfo.getList().sort((t1, t2) -> {
+            int statusCompare = t1.getStatus().compareTo(t2.getStatus());
+            if( statusCompare != 0 ) {
+                return statusCompare;
+            }
+            return t1.getSeq().compareTo(t2.getSeq());
+        });
         return pageInfo;
+    }
+
+    @Override
+    public boolean completeAll() throws Exception {
+        return todoMapper.completeAll() > 0;
+    }
+
+    @Override
+    public boolean deleteAll() throws Exception {
+        return todoMapper.deleteAll() > 0;
     }
     
 }

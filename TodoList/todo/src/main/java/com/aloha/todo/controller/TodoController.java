@@ -84,7 +84,16 @@ public class TodoController {
     @PutMapping()
     public ResponseEntity<?> updateTodo(@RequestBody Todos todo) {
         try {
-            boolean result = todoService.updateById(todo);
+            String id = todo.getId();
+            boolean result = false;
+            // 전체 수정(전체 완료)
+            if( id == null ) {
+                result = todoService.completeAll();
+            }
+            // 단일 수정
+            else {
+                result = todoService.updateById(todo);
+            }
             if( result )
                 return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
             else
@@ -94,10 +103,21 @@ public class TodoController {
         }
     }
     
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> destroyTodo(@PathVariable("id") String id) {
+    @DeleteMapping( {"", "/{id}"} )
+    public ResponseEntity<?> destroyTodo(
+        @PathVariable(value = "id", required = false) String id
+    ) {
         try {
-            boolean result = todoService.deleteById(id);
+
+            boolean result = false;
+            // 전체 삭제
+            if( id == null ) {
+                result = todoService.deleteAll();
+            }
+            // 단일 삭제
+            else {
+                result = todoService.deleteById(id);
+            }
             if( result )
                 return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
             else
