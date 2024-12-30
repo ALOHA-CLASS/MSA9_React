@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace="매퍼 인터페이스 경로" --> 
+<mapper namespace="com.aloha.board.mapper.BoardMapper">
+
+    <select id="list" resultType="Boards">
+        SELECT *
+        FROM boards
+        ORDER BY created_at DESC
+    </select>
+    
+    <select id="select" resultType="Boards">
+        SELECT *
+        FROM boards
+        WHERE no = #{no}
+    </select>
+
+    <select id="selectById" resultType="Boards">
+        SELECT *
+        FROM boards
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO boards ( id, title, writer, content )
+        VALUES ( #{id}, #{title}, #{writer}, #{content} )
+    </insert>
+
+    <update id="update">
+        UPDATE boards
+         <set>
+            <if test="title != null">
+                title = #{title},
+            </if>   
+            <if test="writer != null">
+                writer = #{writer},
+            </if>   
+            <if test="content != null">
+                content = #{content},
+            </if>  
+                updated_at = now()
+         </set>
+        WHERE no = #{no}
+    </update>
+
+    <update id="updateById">
+        UPDATE boards
+         <set>
+            <if test="title != null">
+                title = #{title},
+            </if>   
+            <if test="writer != null">
+                writer = #{writer},
+            </if>   
+            <if test="content != null">
+                content = #{content},
+            </if>  
+                updated_at = now()
+         </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM boards
+        WHERE no = #{no}
+    </delete>
+
+    <delete id="deleteById">
+        DELETE FROM boards
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
