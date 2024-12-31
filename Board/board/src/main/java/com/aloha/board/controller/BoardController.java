@@ -1,10 +1,12 @@
 package com.aloha.board.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,16 +20,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aloha.board.domain.Boards;
+import com.aloha.board.domain.Files;
 import com.aloha.board.domain.Pagination;
 import com.aloha.board.service.BoardService;
+import com.aloha.board.service.FileService;
 import com.github.pagehelper.PageInfo;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/boards")
 public class BoardController {
 
     @Autowired BoardService boardService;
+    @Autowired FileService fileService;
 
     // ⭐ sp-crud
     
@@ -56,17 +64,49 @@ public class BoardController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOneBoard(@PathVariable("id") String id) {
+    public ResponseEntity<?> getOneBoard(
+        @PathVariable("id") String id
+    ) {
         try {
             Boards board = boardService.selectById(id);
-            return new ResponseEntity<>(board, HttpStatus.OK);
+            // 파일 목록 조회
+            Files file = new Files();
+            file.setPTable("boards");
+            file.setPNo(board.getNo());
+            List<Files> fileList = fileService.listByParent(file);
+            Map<String, Object> response = new HashMap<>();
+            response.put("board", board);
+            response.put("fileList", fileList);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    @PostMapping()
-    public ResponseEntity<?> createBoard(@RequestBody Boards board) {
+    /* 
+     * @RequestBody 붙일 때 안 붙일 때 차이
+     * - @RequestBody ⭕ : application/json, application/xml
+     * - @RequestBody ❌ : multipart/form-data, applcation/x-www-form-urlencoded
+     * 
+    */
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createBoardFormData(Boards board) {
+        log.info("게시글 등록 - multipart/form-data");
+        try {
+            boolean result = boardService.insert(board);
+            if( result ) {
+                return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createBoardJSON(@RequestBody Boards board) {
+        log.info("게시글 등록 - application/json");
         try {
             boolean result = boardService.insert(board);
             if( result ) {

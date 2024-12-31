@@ -57,7 +57,6 @@ const UpdateContainer = () => {
 
   return (
     <>
-      <div>UpdateContainer</div>
       <BoardUpdateForm  board={board}
                         onUpdate={onUpdate}
                         onDelete={onDelete} />

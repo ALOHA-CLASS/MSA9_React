@@ -28,7 +28,6 @@ const ListContainer = () => {
 
   return (
     <>
-      <div>ListContainer</div>
       <BoardList boardList={boardList} />
     </>
   )

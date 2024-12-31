@@ -1,0 +1,36 @@
+.form-input {
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    padding: 4px;
+    border: 2px solid gray;
+    border-radius: 4px;
+    resize: none;
+}
+
+.form-input:hover,
+.form-input:focus {
+    border: 2px solid lightblue;
+    background-color: rgba(240,255,255,0.5);
+}
+
+.table th,
+.table td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.table th {
+    background-color: black;
+    color: white;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    width: 20%;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 80%;
+}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
+import styles from './css/BoardRead.module.css'
 
 const BoardRead = ({ board }) => {
 
@@ -9,22 +10,22 @@ const BoardRead = ({ board }) => {
     <div className="container">
       <h1 className='title'>게시글 조회</h1>
       {/* <h3>id : {id}</h3> */}
-      <table>
+      <table className={styles.table}>
         <tr>
-          <td>제목</td>
+          <th>제목</th>
           <td>
-            <input type="text" value={board.title} />
+            <input type="text" value={board.title} className={styles['form-input']} />
           </td>
         </tr>
         <tr>
-          <td>작성자</td>
+          <th>작성자</th>
           <td>
-            <input type="text" value={board.writer} />
+            <input type="text" value={board.writer} className={styles['form-input']} />
           </td>
         </tr>
         <tr>
           <td colSpan={2}>
-            <textarea cols={40} rows={10} value={board.content}></textarea>
+            <textarea cols={40} rows={10} value={board.content} className={styles['form-input']}></textarea>
           </td>
         </tr>
       </table>

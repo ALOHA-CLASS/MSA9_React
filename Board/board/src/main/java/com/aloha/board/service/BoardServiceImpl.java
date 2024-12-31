@@ -1,19 +1,28 @@
 package com.aloha.board.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.aloha.board.domain.Boards;
+import com.aloha.board.domain.Files;
 import com.aloha.board.mapper.BoardMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class BoardServiceImpl implements BoardService {
 
     @Autowired BoardMapper boardMapper;
+
+    @Autowired FileService fileService;
 
     @Override
     public List<Boards> list() {
@@ -31,8 +40,44 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public boolean insert(Boards entity) {
-        return boardMapper.insert(entity) > 0;
+        int result = boardMapper.insert(entity);
+        String pTable = "boards";
+        Long pNo = entity.getNo();      // 🎈
+
+        List<Files> uploadFileList = new ArrayList<>();
+
+        MultipartFile mainFile = entity.getMainFile();
+        if( mainFile != null && !mainFile.isEmpty() ){
+            Files mainFileInfo = new Files();
+            mainFileInfo.setPTable(pTable);
+            mainFileInfo.setPNo(pNo);
+            mainFileInfo.setData(mainFile);
+            mainFileInfo.setType("MAIN");
+            uploadFileList.add(mainFileInfo);
+        }
+
+        List<MultipartFile> files = entity.getFiles();
+        if( files != null && !files.isEmpty() ) {
+            for (MultipartFile multipartFile : files) {
+                if( multipartFile.isEmpty() )
+                    continue;
+                Files fileInfo = new Files();
+                fileInfo.setPTable(pTable);
+                fileInfo.setPNo(pNo);
+                fileInfo.setData(multipartFile);
+                fileInfo.setType("SUB");
+                uploadFileList.add(fileInfo);
+            }
+        }
+        try {
+            result += fileService.upload(uploadFileList);
+        } catch (Exception e) {
+            log.error("게시글 파일 업로드 중 에러 발생");
+            e.printStackTrace();
+        }
+        return result > 0;
     }
 
     @Override

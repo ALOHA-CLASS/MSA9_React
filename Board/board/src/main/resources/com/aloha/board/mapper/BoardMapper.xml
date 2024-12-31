@@ -23,8 +23,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM boards
         WHERE id = #{id}
     </select>
-
-    <insert id="insert">
+    <!-- ✨자동 증가된 boards 의 no 를 Boards 객체의 no 변수에 넣어준다. -->
+    <insert id="insert" parameterType="Boards" useGeneratedKeys="true" keyProperty="no">
         INSERT INTO boards ( id, title, writer, content )
         VALUES ( #{id}, #{title}, #{writer}, #{content} )
     </insert>

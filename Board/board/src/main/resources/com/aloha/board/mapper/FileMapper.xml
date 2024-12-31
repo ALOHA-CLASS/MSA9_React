@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace="매퍼 인터페이스 경로" --> 
+<mapper namespace="com.aloha.board.mapper.FileMapper">
+
+    <select id="list" resultType="Files">
+        SELECT *
+        FROM files
+        ORDER BY created_at DESC
+    </select>
+    
+    <select id="select" resultType="Files">
+        SELECT *
+        FROM files
+        WHERE no = #{no}
+    </select>
+
+    <select id="selectById" resultType="Files">
+        SELECT *
+        FROM files
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO files 
+            ( 
+                id, p_table, p_no, type, 
+                file_name, origin_name, file_path, file_size, seq 
+            )
+        VALUES 
+            ( 
+                #{id}, #{pTable}, #{pNo}, #{type}, 
+                #{fileName}, #{originName}, #{filePath}, #{fileSize}, #{seq}  
+            )
+    </insert>
+
+    <update id="update">
+        UPDATE files
+         <set>
+            <if test="type != null">
+                type = #{type},
+            </if>   
+            <if test="pTable != null">
+                p_table = #{pTable},
+            </if>   
+            <if test="pNo != null">
+                p_no = #{pNo},
+            </if>  
+            <if test="fileName != null">
+                file_name = #{fileName},
+            </if>  
+            <if test="originName != null">
+                origin_name = #{originName},
+            </if>  
+            <if test="filePath != null">
+                file_path = #{filePath},
+            </if>  
+            <if test="fileSize != null">
+                file_size = #{fileSize},
+            </if>  
+            <if test="seq != null">
+                seq = #{seq},
+            </if>  
+                updated_at = now()
+         </set>
+        WHERE no = #{no}
+    </update>
+
+    <update id="updateById">
+        UPDATE files
+         <set>
+            <if test="type != null">
+                type = #{type},
+            </if>   
+            <if test="pTable != null">
+                p_table = #{pTable},
+            </if>   
+            <if test="pNo != null">
+                p_no = #{pNo},
+            </if>  
+            <if test="fileName != null">
+                file_name = #{fileName},
+            </if>  
+            <if test="originName != null">
+                origin_name = #{originName},
+            </if>  
+            <if test="filePath != null">
+                file_path = #{filePath},
+            </if>  
+            <if test="fileSize != null">
+                file_size = #{fileSize},
+            </if>  
+            <if test="seq != null">
+                seq = #{seq},
+            </if>  
+                updated_at = now()
+         </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM files
+        WHERE no = #{no}
+    </delete>
+
+    <delete id="deleteById">
+        DELETE FROM files
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 부모 테이블 기준 목록 -->
+    <select id="listByParent" resultType="Files">
+        SELECT *
+        FROM files
+        WHERE 
+                p_table = #{pTable}
+            AND p_no = #{pNo}
+        ORDER BY seq ASC
+    </select>
+
+    <!-- 부모 테이블 기준 삭제 -->
+    <delete id="deleteByParent">
+        DELETE FROM files
+        WHERE 
+                p_table = #{pTable}
+            AND p_no = #{pNo}
+    </delete>
+
+</mapper>

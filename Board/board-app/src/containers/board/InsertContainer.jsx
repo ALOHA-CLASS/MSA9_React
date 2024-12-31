@@ -25,7 +25,6 @@ const InsertContainer = () => {
 
   return (
     <>
-      <div>InsertContainer</div>
       <BoardInsertForm onInsert={onInsert} />
     </>
   )

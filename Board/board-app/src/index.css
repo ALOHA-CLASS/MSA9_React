@@ -1,0 +1,30 @@
+/* 스타일 초기화 작업 */
+/* 
+    - 폰트
+    - 초기화 (reset)
+    - CSS 변수 선언
+        --main-color : red;
+        --sub-colur : blue;
+*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: inherit;}
+body {
+    /* font-family: "Roboto", "Noto Sans KR", serif; */
+    font-family: "Afacad Flux", "Jua", serif;
+    font-size: var(--font-size-main);
+}
+
+ul { list-style-type: none; }
+a { text-decoration: none; color: black; font-weight: bold; }
+a:hover:not(.btn) { text-decoration: underline; }
+img { width: 100%; }
+button { cursor: pointer; }
+hr { margin-bottom: 10px; }
+
+:root {
+    --font-size-main: 20px;
+}
