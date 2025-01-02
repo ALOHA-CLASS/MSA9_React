@@ -19,3 +19,24 @@ export const formatDate = (dateString) => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
 }
+
+export const byteToUnit = (byte) => {
+    const unitMultiple = {
+        "B"     : 1,
+        "KB"    : 1024,
+        "MB"    : 1024 * 1024,
+        "GB"    : 1024 * 1024 * 1024,
+        "TB"    : 1024 * 1024 * 1024 * 1024
+    }
+
+    let unit = ""
+    for( const key in unitMultiple ) {
+        if( byte >= unitMultiple[key] ) {
+            unit = key
+        }
+    }
+
+    // 환산
+    // 2500 byte ➡ 2.xx KB
+    return parseFloat(byte / unitMultiple[unit]).toFixed(2) + " " + unit
+}

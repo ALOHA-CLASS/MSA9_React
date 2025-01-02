@@ -52,3 +52,22 @@ table {
     width: 100%;
     margin: 10px auto;
 }
+
+.flex-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.flex-box .item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.file-img {
+    width: 140px;
+    height: 78px;
+    object-fit: cover;
+}

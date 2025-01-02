@@ -92,6 +92,8 @@ public class BoardController {
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createBoardFormData(Boards board) {
         log.info("게시글 등록 - multipart/form-data");
+        log.info("########### board ");
+        log.info(": "+ board);
         try {
             boolean result = boardService.insert(board);
             if( result ) {

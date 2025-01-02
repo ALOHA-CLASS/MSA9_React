@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import * as format from '../../utils/format'
 // import './css/BoardList.css'
 import styles from './css/BoardList.module.css'
+import noImage from '../../assets/react.svg'
 
 
 const BoardList = ({ boardList }) => {
@@ -23,7 +24,8 @@ const BoardList = ({ boardList }) => {
       <table border={1} className={`${styles.table}`}>
         <thead>
           <tr>
-            <th>번호</th>
+            {/* <th>번호</th> */}
+            <th>이미지</th>
             <th>제목</th>
             <th>작성자</th>
             <th>등록일자</th>
@@ -40,13 +42,23 @@ const BoardList = ({ boardList }) => {
             boardList.length == 0 
             ? 
               <tr>
-                <td colSpan={4}>조회된 데이터가 없습니다.</td>
+                <td colSpan={5}>조회된 데이터가 없습니다.</td>
               </tr>
             :
               boardList.map( (board) => {
                 return (
                   <tr key={board.no}>
-                    <td align='center'>{ board.no }</td>
+                    {/* <td align='center'>{ board.no }</td> */}
+                    <td>
+                      {
+                        board.file == null
+                        ?
+                        <img src={noImage} />
+                        :
+                        <img src={`/api/files/img/${board.file.id}`} 
+                             style={ { width: '100px' } } alt={board.file.originName} />
+                      }
+                    </td>
                     <td align='left'>
                       <Link to={`/boards/${board.id}`}>
                         {board.title}

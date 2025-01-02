@@ -6,11 +6,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- namespace="매퍼 인터페이스 경로" --> 
 <mapper namespace="com.aloha.board.mapper.BoardMapper">
 
-    <select id="list" resultType="Boards">
+    <resultMap type="Boards" id="boardMap">
+        <id property="no" column="no" />
+        <result property="no" column="no" />
+        <result property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="writer" column="writer" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+
+        <association property="file" column="no" javaType="Files" select="selectMainFile"></association>
+
+    </resultMap>
+
+
+    <select id="list" resultMap="boardMap">
         SELECT *
         FROM boards
         ORDER BY created_at DESC
     </select>
+
+    <!-- <select id="list" resultType="Boards">
+        SELECT *
+        FROM boards
+        ORDER BY created_at DESC
+    </select> -->
     
     <select id="select" resultType="Boards">
         SELECT *
@@ -72,5 +93,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DELETE FROM boards
         WHERE id = #{id}
     </delete>
+
+    <!-- 메인 파일 정보 조회 -->
+    <select id="selectMainFile" resultType="Files">
+        SELECT *
+        FROM Files
+        WHERE p_no = #{no}
+          AND p_table = 'boards'
+          AND type = 'MAIN'
+    </select>
 
 </mapper>
