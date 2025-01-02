@@ -3,6 +3,7 @@ package com.aloha.board.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,16 +63,16 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean delete(Long no) {
-        Files file = fileMapper.select(no);
-        delete(file);
-        return fileMapper.delete(no) > 0;
+        Files file = fileMapper.select(no);     // 파일정보 조회
+        delete(file);                           // 1️⃣ 파일 삭제
+        return fileMapper.delete(no) > 0;       // 2️⃣ DB 데이터 삭제
     }
 
     @Override
     public boolean deleteById(String id) {
-        Files file = fileMapper.selectById(id);
-        delete(file);
-        return fileMapper.deleteById(id) > 0;
+        Files file = fileMapper.selectById(id); // 파일정보 조회
+        delete(file);                           // 1️⃣ 파일 삭제
+        return fileMapper.deleteById(id) > 0;   // 2️⃣ DB 데이터 삭제
     }
 
     // 파일 시스템의 파일 삭제
@@ -188,6 +189,51 @@ public class FileServiceImpl implements FileService {
         sos.close();
 
         return result;
+    }
+
+    @Override
+    public boolean deleteFiles(List<Long> noList) {
+        if( noList  == null ) return false;
+
+        // 1️⃣ 파일 삭제
+        for (Long no : noList) {
+            Files file = select(no);
+            delete(file);
+        }
+        // 2️⃣-1 파일 데이터 삭제
+        // String nos = "";        // 1,2,3
+        // for (int i = 0; i < noList.size(); i++) {
+        //     nos += noList.get(i).toString();
+        //     if( i != noList.size() - 1 )
+        //         nos += ",";
+        // }
+        // log.info("nos : " + nos);
+        // return fileMapper.deleteFiles(nos) > 0;
+
+        // 2️⃣-2 : MyBaits 의 <foreach> 로 구분자 처리
+        return fileMapper.deleteFileList(noList) > 0;
+    }
+
+    @Override
+    public boolean deleteFilesById(List<String> idList) {
+        if( idList  == null ) return false;
+
+        // 1️⃣ 파일 삭제
+        for (String id : idList) {
+            Files file = selectById(id);
+            delete(file);
+        }
+        // 2️⃣-1 파일 데이터 삭제
+        // String ids = "";        // 'id1','id2','id3'
+        // for (int i = 0; i < idList.size(); i++) {
+        //     ids += ("'" + idList.get(i) + "'");
+        //     if( i != idList.size() - 1 )
+        //         ids += ",";
+        // }
+        // log.info("ids : " + ids);
+        // return fileMapper.deleteFilesById(ids) > 0;
+        // 2️⃣-2 : MyBaits 의 <foreach> 로 구분자 처리
+        return fileMapper.deleteFileListById(idList) > 0;
     }
     
 }

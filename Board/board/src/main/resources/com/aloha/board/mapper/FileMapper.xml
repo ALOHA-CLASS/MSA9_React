@@ -129,4 +129,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             AND p_no = #{pNo}
     </delete>
 
+    <!-- ✨ #{} vs ${} -->
+    <!-- #{변수명}  ➡  '값' -->
+    <!-- ${변수명}  ➡   값 -->
+
+    <!-- 선택 삭제 - no -->
+    <!-- no IN (1,2,3) -->
+    <delete id="deleteFiles">
+        DELETE FROM files
+        WHERE no IN ( ${no} )  
+    </delete>
+
+    <!-- 선택 삭제 - id -->
+    <!-- id IN ('ID1', 'ID2', 'ID3') -->
+    <delete id="deleteFilesById">
+        DELETE FROM files
+        WHERE id IN ( ${id} )
+    </delete>
+
+
+    <!-- 선택 삭제 - no -->
+    <!-- no IN (1,2,3) -->
+    <delete id="deleteFileList">
+        DELETE FROM files
+        WHERE no IN 
+        <foreach collection="noList" item="no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
+    </delete>
+
+    <!-- 선택 삭제 - id -->
+    <!-- id IN ('ID1', 'ID2', 'ID3') -->
+    <delete id="deleteFileListById">
+        DELETE FROM files
+        WHERE id IN 
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
 </mapper>

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aloha.board.domain.Files;
@@ -28,7 +29,6 @@ import com.aloha.board.service.FileService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Slf4j
@@ -105,6 +105,35 @@ public class FileController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * 파일 선택 삭제
+     * @param noList : { "noList" : [1,2,3] }
+     * @param noList : ?noList=1,2,3
+     * @param idList : { "idList" : ['id1','id2','id3'] }
+     * @param idList : ?idList=id1,id2,id3 
+     * @return
+     */
+    @DeleteMapping("")
+    public ResponseEntity<?> deleteFiles(
+        @RequestParam(value = "noList", required = false) List<Long> noList,
+        @RequestParam(value = "idList", required = false) List<String> idList
+    ) {
+        log.info("noList[] : " + noList);
+        log.info("idList[] : " + idList);
+        boolean result = false;
+        if( noList != null ) {
+            result = fileService.deleteFiles(noList);
+        }
+        if( idList != null ) {
+            result = fileService.deleteFilesById(idList);
+        }
+        if( result )
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 
 
     /**

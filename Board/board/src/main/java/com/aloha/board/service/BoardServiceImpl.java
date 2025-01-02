@@ -92,12 +92,33 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public boolean delete(Long no) {
-        return boardMapper.delete(no) > 0;
+        // 게시글 삭제
+        boolean result = boardMapper.delete(no) > 0;
+
+        // 종속된 첨부파일 삭제
+        Files file = new Files();
+        file.setPTable("boards");
+        file.setPNo(no);
+        int deletedCount = fileService.deleteByParent(file);
+        log.info(deletedCount + "개의 파일이 삭제 되었습니다.");
+        return result;
     }
 
     @Override
     public boolean deleteById(String id) {
-        return boardMapper.deleteById(id) > 0;
+        // 게시글 조회
+        Boards board = boardMapper.selectById(id);
+        Long no = board.getNo();
+        // 게시글 삭제
+        boolean result = boardMapper.deleteById(id) > 0;
+
+        // 종속된 첨부파일 삭제
+        Files file = new Files();
+        file.setPTable("boards");
+        file.setPNo(no);
+        int deletedCount = fileService.deleteByParent(file);
+        log.info(deletedCount + "개의 파일이 삭제 되었습니다.");
+        return result;
     }
 
     @Override
