@@ -13,6 +13,7 @@ const UpdateContainer = () => {
   // 🧊 state
   const [board, setBoard] = useState({})
   const [fileList, setFileList] = useState([])
+  const [mainFile, setMainFile] = useState()
 
   // 게시글 데이터 요청
   const getBoard = async () => {
@@ -21,6 +22,8 @@ const UpdateContainer = () => {
     setBoard(data.board)
     setFileList(data.fileList)
     
+    const no = await data.board.no
+    getMainFile(no)   // 메인 파일 
   }
 
   // 다운로드
@@ -43,9 +46,10 @@ const UpdateContainer = () => {
     }
 
   // 게시글 수정 요청 이벤트 핸들러
-  const onUpdate = async (id, title, writer, content) => {
+  const onUpdate = async (formData, headers) => {
     try {
-      const response = await boards.update(id, title, writer, content)
+      // const response = await boards.update(id, title, writer, content)
+      const response = await boards.update(formData, headers)
       const data = await response.data
       console.log(data);
       alert('수정 완료')
@@ -89,6 +93,9 @@ const UpdateContainer = () => {
       const fileList = data.fileList
       setFileList(fileList)
 
+      // 메인 파일 요청
+      getMainFile(board.no)   
+
     } catch (error) {
       console.log(error);
     }
@@ -109,11 +116,21 @@ const UpdateContainer = () => {
       const data = boardResponse.data
       const fileList = data.fileList
       setFileList(fileList)
+
+      // 메인 파일 요청
+      getMainFile(board.no)
       
     } catch (error) {
       console.log(error);
     }
     
+  }
+
+  // 메인 파일 조회
+  const getMainFile = async (no) => {
+    const response = await files.fileByType("boards", no, "MAIN")
+    const file = await response.data
+    setMainFile(file)
   }
 
   useEffect( () => {
@@ -128,7 +145,8 @@ const UpdateContainer = () => {
                         fileList={fileList} 
                         onDownload={onDownload}
                         onDeleteFile={onDeleteFile}
-                        deleteCheckedFiles={deleteCheckedFiles}  />
+                        deleteCheckedFiles={deleteCheckedFiles}
+                        mFile={mainFile}  />
     </>
 
   )

@@ -10,8 +10,9 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 const BoardUpdateForm = ({ 
-  board, onUpdate, onDelete, fileList, onDownload, onDeleteFile, deleteCheckedFiles
-}) => {
+  board, onUpdate, onDelete, fileList, onDownload, 
+  onDeleteFile, deleteCheckedFiles, mFile
+}) => { 
 
   const { id } = useParams()
 
@@ -20,14 +21,54 @@ const BoardUpdateForm = ({
   const [writer, setWriter] = useState('')
   const [content, setContent] = useState('')
   const [fileIdList, setFileIdList] = useState([])  // 선택 삭제 id 목록
+  const [mainFile, setMainFile] = useState(null)    // ✅ mainFile state 추가
+  const [files, setFiles] = useState(null)          // ✅ files state 추가
 
 
   const changeTitle = (e) => { setTitle( e.target.value ) }
   const changeWriter = (e) => { setWriter( e.target.value ) }
   const changeContent = (e) => { setContent( e.target.value ) }
 
+  // ✅ 파일 변경 이벤트 핸들러 추가
+  const changeMainFile = (e) => {
+    // files : []
+    setMainFile(e.target.files[0])
+  }
+
+  const changeFile = (e) => {
+    setFiles(e.target.files)
+  }
+
   const onSubmit = () => {
-    onUpdate(id, title, writer, content)
+
+    // 파일 업로드
+    // application/json ➡ multipart/form-data
+    const formData = new FormData()
+    // 게시글 정보 세팅
+    formData.append('id', id)               // ⭐
+    formData.append('title', title)
+    formData.append('writer', writer)
+    formData.append('content', content)
+
+    // 📄 파일 데이터 세팅
+    if( mainFile ) {
+      formData.append('mainFile', mainFile)
+    }
+    if( files ) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        formData.append('files', file)
+      }
+    }
+
+    // 🎫 헤더
+    const headers = {
+      'Content-Type' : 'multipart/form-data'
+    }
+
+    // onUpdate(title, writer, content)   // application/json 
+    onUpdate(formData, headers)           // multipart/form-data
+
   }
 
   const handleDelete = () => {
@@ -106,6 +147,30 @@ const BoardUpdateForm = ({
                       className={styles['form-input']}></textarea>
           </td>
         </tr> 
+        {/* 
+          mFile(대표파일) 없을 때, 파일첨부UI 출력 
+          mFile(대표파일) 있을 때, 파일첨부UI 숨김
+        */}
+        {
+          mFile 
+          ?
+          <></>
+          :
+          (
+            <tr>
+              <td>대표 파일</td>
+              <td>
+                <input type="file" onChange={changeMainFile}  />
+              </td>
+            </tr>
+          )
+        }
+        <tr>
+          <td>첨부 파일</td>
+          <td>
+            <input type="file" multiple onChange={changeFile}  />
+          </td>
+        </tr>
         <tr>
           <td colSpan={2}>
             {
@@ -115,8 +180,11 @@ const BoardUpdateForm = ({
                   <div className="item">
                     {/* <input type="checkbox" onChange={ () => checkFileId( file.id ) } />   */}
                     <Checkbox onChange={ () => checkFileId( file.id ) } />
-                    <img src={`/api/files/img/${file.id}`} alt={file.originName}
-                        className='file-img' />
+                    <div className='item-img'>
+                      { file.type == 'MAIN' && <span className='badge'>대표</span> }
+                      <img src={`/api/files/img/${file.id}`} alt={file.originName}
+                          className='file-img' />
+                    </div>
                     <span>{file.originName} ({ format.byteToUnit( file.fileSize ) })</span>
                   </div>
 

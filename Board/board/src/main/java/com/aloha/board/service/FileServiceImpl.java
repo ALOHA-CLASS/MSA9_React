@@ -235,5 +235,15 @@ public class FileServiceImpl implements FileService {
         // 2️⃣-2 : MyBaits 의 <foreach> 로 구분자 처리
         return fileMapper.deleteFileListById(idList) > 0;
     }
+
+    @Override
+    public Files selectByType(Files file) {
+        return fileMapper.selectByType(file);
+    }
+
+    @Override
+    public List<Files> listByType(Files file) {
+        return fileMapper.listByType(file);
+    }
     
 }

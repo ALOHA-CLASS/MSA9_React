@@ -13,7 +13,8 @@ export const select = (id) => axios.get(`/boards/${id}`)
 export const insert = (formData, headers) => axios.post("/boards", formData, headers )
 
 // 수정
-export const update = (id, title, writer, content) => axios.put("/boards", {id,title,writer,content} )
+// export const update = (id, title, writer, content) => axios.put("/boards", {id,title,writer,content} )
+export const update = (formData, headers) => axios.put("/boards", formData, headers )
 
 // 삭제
 export const remove = (id) => axios.delete(`/boards/${id}`)

@@ -12,6 +12,7 @@ const ReadContainer = () => {
   // 🧊 state
   const [board, setBoard] = useState({})
   const [fileList, setFileList] = useState([])
+  const [mainFile, setMainFile] = useState()
 
   // 게시글 데이터 요청
   const getBoard = async () => {
@@ -19,7 +20,9 @@ const ReadContainer = () => {
     const data = await response.data          // ⭐ data 💌 board + fileList
     setBoard(data.board)
     setFileList(data.fileList)
-    
+
+    const no = await data.board.no
+    getMainFile(no)   // 메인 파일 
   }
 
   // 다운로드
@@ -41,14 +44,24 @@ const ReadContainer = () => {
     document.body.removeChild(link)
   }
 
+  // 메인 파일 조회
+  const getMainFile = async (no) => {
+    const response = await files.fileByType("boards", no, "MAIN")
+    const file = await response.data
+    setMainFile(file)
+  }
+
   useEffect( () => {
+    // 게시글 정보 (게시글+파일목록)
     getBoard()
+    
   }, [])
 
   return (
     <>
       <BoardRead 
           board={board} 
+          mainFile={mainFile}
           fileList={fileList} 
           onDownload={onDownload} />
     </>
