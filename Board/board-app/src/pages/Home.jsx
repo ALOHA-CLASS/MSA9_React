@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   return (
     <>
-      <div>Home</div>
-      <Link to="/boards">게시판</Link>
+      <div className='container'>
+        <h1>Board App</h1>
+        <h2>* 게시판 앱</h2>
+        
+        <Link to="/boards" className='btn'>게시판</Link>
+      </div>
     </>
   )
 }
