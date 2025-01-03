@@ -94,6 +94,28 @@ const UpdateContainer = () => {
     }
   }
 
+  // 선택 삭제 요청
+  const deleteCheckedFiles = async (idList) => {
+    const fileIdList = idList.join(",")
+    console.log(fileIdList);
+
+    try {
+      // 파일 선택 삭제 요청
+      const response = await files.removeFiles( fileIdList )
+      console.log(response.data);
+
+      // 파일 목록 갱신
+      const boardResponse = await boards.select(id)
+      const data = boardResponse.data
+      const fileList = data.fileList
+      setFileList(fileList)
+      
+    } catch (error) {
+      console.log(error);
+    }
+    
+  }
+
   useEffect( () => {
     getBoard()
   }, [])
@@ -105,7 +127,8 @@ const UpdateContainer = () => {
                         onDelete={onDelete}
                         fileList={fileList} 
                         onDownload={onDownload}
-                        onDeleteFile={onDeleteFile}  />
+                        onDeleteFile={onDeleteFile}
+                        deleteCheckedFiles={deleteCheckedFiles}  />
     </>
 
   )

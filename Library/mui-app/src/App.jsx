@@ -13,7 +13,7 @@ function App() {
       <SearchIcon />
       <FavoriteIcon />
       <DeleteForeverIcon />
-      <SettingsIcon />g
+      <SettingsIcon />
       
     </div>
   )

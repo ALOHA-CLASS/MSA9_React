@@ -6,8 +6,12 @@ import styles from './css/BoardUpdateForm.module.css'
 import * as format from '../../utils/format'
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Checkbox from '@mui/material/Checkbox';
 
-const BoardUpdateForm = ({ board, onUpdate, onDelete, fileList, onDownload, onDeleteFile }) => {
+
+const BoardUpdateForm = ({ 
+  board, onUpdate, onDelete, fileList, onDownload, onDeleteFile, deleteCheckedFiles
+}) => {
 
   const { id } = useParams()
 
@@ -15,6 +19,8 @@ const BoardUpdateForm = ({ board, onUpdate, onDelete, fileList, onDownload, onDe
   const [title, setTitle] = useState('')
   const [writer, setWriter] = useState('')
   const [content, setContent] = useState('')
+  const [fileIdList, setFileIdList] = useState([])  // 선택 삭제 id 목록
+
 
   const changeTitle = (e) => { setTitle( e.target.value ) }
   const changeWriter = (e) => { setWriter( e.target.value ) }
@@ -34,7 +40,38 @@ const BoardUpdateForm = ({ board, onUpdate, onDelete, fileList, onDownload, onDe
     const check = window.confirm('파일을 삭제하시겠습니까?')
     if( check )
       onDeleteFile(id)
-      
+  }
+
+  const handleCheckedFileDelete = (id) => {
+    const check = window.confirm(`선택한 ${fileIdList.length} 개의 파일을 삭제하시겠습니까?`)
+    if( check ) {
+      deleteCheckedFiles(fileIdList)
+      setFileIdList([])               // 삭제할 id 리스트 초기화
+    }
+  }
+
+  // ✅ 체크박스 클릭 핸들러
+  const checkFileId = (id) => {
+    console.log(id);
+    
+    let checked = false
+    // 체크 여부 확인
+    for (let i = 0; i < fileIdList.length; i++) {
+      const fileId = fileIdList[i];
+      // 체크⭕ : 체크박스 해제🟩
+      if( fileId == id ) {
+        fileIdList.splice(i, 1)
+        checked = true
+      }
+    }
+
+    // 체크❌ : 체크박스 지정 ✅
+    if( !checked ) {
+      // 체크한 아이디 추가
+      fileIdList.push(id)
+    }
+    console.log(`체크한 아이디 : ${fileIdList}`);
+    setFileIdList(fileIdList)
   }
 
   useEffect( () => {
@@ -74,11 +111,15 @@ const BoardUpdateForm = ({ board, onUpdate, onDelete, fileList, onDownload, onDe
             {
               fileList.map( (file) => (
                 <div className='flex-box' key={file.id}>
+
                   <div className="item">
+                    {/* <input type="checkbox" onChange={ () => checkFileId( file.id ) } />   */}
+                    <Checkbox onChange={ () => checkFileId( file.id ) } />
                     <img src={`/api/files/img/${file.id}`} alt={file.originName}
                         className='file-img' />
                     <span>{file.originName} ({ format.byteToUnit( file.fileSize ) })</span>
                   </div>
+
                   <div className="item">
                     <button className='btn' onClick={ () => onDownload(file.id, file.originName) }>
                       <DownloadIcon />
@@ -94,7 +135,10 @@ const BoardUpdateForm = ({ board, onUpdate, onDelete, fileList, onDownload, onDe
         </tr>
       </table>
       <div className="btn-box">
-        <Link to="/boards" className="btn">목록</Link>
+        <div>
+          <Link to="/boards" className="btn">목록</Link>
+          <button className='btn' onClick={ handleCheckedFileDelete }>선택 삭제</button>
+        </div>
         <div>
           <button onClick={onSubmit} className='btn'>수정</button>
           <button onClick={handleDelete} className='btn'>삭제</button>
