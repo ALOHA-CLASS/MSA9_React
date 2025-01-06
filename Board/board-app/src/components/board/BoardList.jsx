@@ -1,12 +1,16 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import {Link, useLocation} from 'react-router-dom'
 import * as format from '../../utils/format'
 // import './css/BoardList.css'
 import styles from './css/BoardList.module.css'
 import noImage from '../../assets/react.svg'
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 
-const BoardList = ({ boardList }) => {
+const BoardList = ({ boardList, pagination }) => {
   // const boardList = [
   //   { no: 1, title: "게시글 제목1", writer: "작성자1", "createdAt" : "2024-12-30 12:45:50" },
   //   { no: 2, title: "게시글 제목2", writer: "작성자2", "createdAt" : "2024-12-30 12:45:50" },
@@ -14,6 +18,31 @@ const BoardList = ({ boardList }) => {
   //   { no: 4, title: "게시글 제목4", writer: "작성자4", "createdAt" : "2024-12-30 12:45:50" },
   //   { no: 5, title: "게시글 제목5", writer: "작성자5", "createdAt" : "2024-12-30 12:45:50" }
   // ]
+
+  // 🧊 state
+  const [pageList, setPageList] = useState([])
+
+  // ?파라미터=값 가져오는 방법
+  // const location = useLocation()
+  // const query = new URLSearchParams(location.search)
+  // const page = query.get("page") 
+  // const size = query.get("size")
+
+  const createPageList = () => {
+    let newPageList = []
+    for (let i = pagination.start; i <= pagination.end; i++) {
+      newPageList.push(i)
+    }
+    setPageList(newPageList)
+  }
+
+  useEffect(() => {
+    createPageList()
+  
+  }, [pagination])
+  
+
+
   
   return (
     <div className="container">
@@ -21,6 +50,7 @@ const BoardList = ({ boardList }) => {
       <Link to="/boards/insert" className='btn' >글쓰기</Link>
 
       {/* <table border={1} className='table'> */}
+      {/* 게시글 목록 */}
       <table border={1} className={`${styles.table}`}>
         <thead>
           <tr>
@@ -42,7 +72,7 @@ const BoardList = ({ boardList }) => {
             boardList.length == 0 
             ? 
               <tr>
-                <td colSpan={5}>조회된 데이터가 없습니다.</td>
+                <td colSpan={5} align='center'>조회된 데이터가 없습니다.</td>
               </tr>
             :
               boardList.map( (board) => {
@@ -72,6 +102,55 @@ const BoardList = ({ boardList }) => {
           }
         </tbody>
       </table>
+      {/* 페이지네이션 - a */}
+      {/* <div className="pagination"> */}
+        {/* <a href={`/boards?page=${pagination.first}`} className='btn-page'>처음</a> */}
+        {/* <a href={`/boards?page=${pagination.prev}`} className='btn-page'>이전</a> */}
+        {
+          // pageList.map( page => (
+            // ✅ active 클래스 추가 (현재 페이지)
+            // <a href={`/boards?page=${page}`} className={page == pagination.page ? 'btn-page active' : 'btn-page' }>{page}</a>
+            // <a href={`/boards?page=${page}`} className={'btn-page ' + ( page == pagination.page && 'active' ) } >{page}</a>
+          // ))
+        }
+        {/* <a href={`/boards?page=${pagination.next}`} className='btn-page'>다음</a> */}
+        {/* <a href={`/boards?page=${pagination.last}`} className='btn-page'>마지막</a> */}
+      {/* </div> */}
+
+      {/* 페이지네이션 - Link */}
+      {
+        ( pagination != null && pagination.total > 0 )
+        &&
+        (
+          <div className="pagination">
+            <Link to={`/boards?page=${pagination.first}`} className='btn-page'>
+              <KeyboardDoubleArrowLeftIcon />
+            </Link>
+            {
+              ( pagination.page <= pagination.first )
+              ||
+              <Link to={`/boards?page=${pagination.prev}`} className='btn-page'>
+                <KeyboardArrowLeftIcon />        
+              </Link>
+            }
+            {
+              pageList.map( page => (
+                <Link to={`/boards?page=${page}`} className={'btn-page ' + ( page == pagination.page && 'active' ) } >{page}</Link>
+              ))
+            }
+            {
+              (pagination.page >= pagination.last)
+              ||
+              <Link to={`/boards?page=${pagination.next}`} className='btn-page'>
+                <KeyboardArrowRightIcon />
+              </Link>
+            }
+            <Link to={`/boards?page=${pagination.last}`} className='btn-page'>
+              <KeyboardDoubleArrowRightIcon />
+            </Link>
+          </div>
+        )
+      }
     </div>
   )
 }

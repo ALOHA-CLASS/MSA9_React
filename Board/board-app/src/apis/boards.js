@@ -3,7 +3,7 @@ import axios from 'axios';
 axios.defaults.baseURL = "/api"
 
 // 목록
-export const list = () => axios.get("/boards")
+export const list = (page, size) => axios.get(`/boards?page=${page}&size=${size}`)
 
 // 조회
 export const select = (id) => axios.get(`/boards/${id}`)
