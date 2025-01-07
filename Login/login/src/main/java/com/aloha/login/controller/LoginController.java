@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aloha.login.constants.SecurityConstants;
 import com.aloha.login.domain.AuthenticationRequest;
-import com.aloha.login.props.JwtProps;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.aloha.login.security.constants.SecurityConstants;
+import com.aloha.login.security.props.JwtProps;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

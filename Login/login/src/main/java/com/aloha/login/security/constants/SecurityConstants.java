@@ -1,4 +1,4 @@
-package com.aloha.login.constants;
+package com.aloha.login.security.constants;
 
 // 해당 클래스는 Spring Security 및 JWT 관련 상수를 정의한 상수 클래스입니다.
 /**
@@ -19,4 +19,7 @@ public final class SecurityConstants {
     public static final String TOKEN_TYPE = "JWT";
     
     // 이 클래스를 final로 선언하여 상속을 방지하고, 상수만을 정의하도록 만듭니다.
+
+    // 🔗 로그인 경로
+    public static final String LOGIN_URL = "/login";
 }

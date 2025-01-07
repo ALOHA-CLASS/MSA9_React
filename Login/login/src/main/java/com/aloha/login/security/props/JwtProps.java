@@ -1,4 +1,4 @@
-package com.aloha.login.props;
+package com.aloha.login.security.props;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
