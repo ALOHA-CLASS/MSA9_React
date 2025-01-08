@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.aloha.login.domain.CustomUser;
 import com.aloha.login.domain.Users;
@@ -23,7 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -79,6 +81,12 @@ public class UserController {
     }
     
 
+    /**
+     * 회원 정보 수정
+     * @param user
+     * @return
+     * @throws Exception
+     */
     // @PreAuthorize(" hasRole('ROLE_USER') ")                  // 👩‍💼 사용자 권한
     // @PreAuthorize(" hasRole('ROLE_ADMIN') ")                 // 👮‍♀️ 관리자 권한
     // @PreAuthorize(" hasAnyRole('ROLE_USER', 'ROLE_ADMIN') ")    // 👩‍💼 사용자 OR 👮‍♀️ 관리자
@@ -95,6 +103,23 @@ public class UserController {
         else {
             log.info("회원 수정 실패!");
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // 회원 삭제(탈퇴)
+    @PreAuthorize(" hasRole('ROLE_ADMIN') or #p0 == authentication.name ")
+    @DeleteMapping("/{username}")
+    public ResponseEntity<?> delete(
+        @PathVariable("username") String username
+    ) throws Exception {
+        try {
+            boolean result = userService.delete(username);
+            if( result ) 
+                return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+            else 
+                return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+            } catch (Exception e) {
+                return new ResponseEntity<>("FAIL", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

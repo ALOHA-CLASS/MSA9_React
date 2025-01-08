@@ -61,6 +61,11 @@ public class UserServiceImpl implements UserService {
         return reuslt > 0;
     }
 
+    @Override
+    public boolean delete(String username) throws Exception {
+        return userMapper.delete(username) > 0;
+    }
+
 
     
 }

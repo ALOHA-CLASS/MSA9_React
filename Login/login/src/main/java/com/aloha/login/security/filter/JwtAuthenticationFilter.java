@@ -101,6 +101,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Authorization 응답 헤더 세팅
         response.addHeader("Authorization", SecurityConstants.TOKEN_PREFIX + jwt);
         response.setStatus(200);
+
     }
 
         

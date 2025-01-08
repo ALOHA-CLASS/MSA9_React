@@ -72,4 +72,10 @@
         VALUES ( #{username}, #{auth} )
     </insert>
 
+    <!-- 회원 삭제 -->
+    <delete id="delete">
+        DELETE FROM users
+         WHERE username = #{username}
+    </delete>
+
 </mapper>
