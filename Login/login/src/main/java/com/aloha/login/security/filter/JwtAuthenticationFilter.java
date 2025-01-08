@@ -1,6 +1,7 @@
 package com.aloha.login.security.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import com.aloha.login.domain.CustomUser;
 import com.aloha.login.domain.Users;
 import com.aloha.login.security.constants.SecurityConstants;
 import com.aloha.login.security.provider.JwtProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -102,6 +104,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader("Authorization", SecurityConstants.TOKEN_PREFIX + jwt);
         response.setStatus(200);
 
+        // 👩‍💼 사용자 정보 body 세팅
+        ObjectMapper ObjectMapper = new ObjectMapper();
+        String jsonString = ObjectMapper.writeValueAsString(user);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        // jsonStrin : "{ 'username' : 'aloha', 'name' : '사용자', ... }"
+        PrintWriter printWriter = response.getWriter();
+        printWriter.write(jsonString);
+        printWriter.flush();
+        
     }
 
         
