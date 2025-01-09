@@ -60,7 +60,8 @@
     <!-- 회원 정보 수정 -->
     <update id="update">
         UPDATE users
-           SET name = #{name}
+           SET password = #{password}
+              ,name = #{name}
               ,email = #{email}
               ,updated_at = now()
         WHERE username = #{username}
