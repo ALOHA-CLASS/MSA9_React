@@ -161,7 +161,7 @@ public class FileServiceImpl implements FileService {
 
         // 파일이 없으면
         if( file == null ) {
-            response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return 0;
         }
 
